@@ -1,0 +1,63 @@
+Docker Networking - comunicação entre os containers
+
+Listando as redes existentes
+docker network ls
+----------------------------------------------------------
+				COMANDOS
+docker inspect - descreve  o container, versão por exemplo.
+
+hostname -i - verifica o ip atribuido a instacia, ou seja usado quando estamos dentro do container
+Docker network create --driver bridge nomedarede - cria uma rede local
+docker run -it --name wordpress --network minha-rede wordpress - adiciona o container a rede especificada
+docker run -p 8080:8081 --network=minha-rede mongo-express - executando cliente/container dentro da rede
+-----------------------------------------------------------
+Dentro dessa rede local, os containers podem se comunicar
+livremente!
+
+Podemos criar outras instâncias e tentar utilizar o comando
+ping entre elas.
+----
+Sempre que instanciamos um container, ele irá receber um
+novo IP.
+Isso pode ser ruim nas situações em que queremos, por
+exemplo, inserir dentro de uma aplicação o endereço exato de
+um banco de dados.
+
+6 Networking no Docker
+Infelizmente, apesar de conseguirmos nomear um container,
+com a opção --name, a rede padrão do Docker não permite
+atribuir um
+
+hostname a um container.(ip)
+
+Se criarmos nossa própria rede, podemos nomear nossos
+containers e realizar a comunicação utilizando esses nomes!
+
+Utilizaremos o comando network e indicaremos qual o driver utilizaremos para a criação da rede.
+
+docker network create --driver bridge minha-rede
+----------------------------------------------------------
+Adicionando containers a rede local
+
+docker run --name meu-wordpress --network minha-rede wordpress
+<no meu caso a rede local se chama wpmql>
+
+-----------------------------------------------------------
+
+Conectando em rede local
+
+Agora conecte mongodb e mongo-express usando a
+minha-rede.
+Executando o servidor mongodb
+<executando com uma porta. obs o primeiro numero é referente a porta externa e o segundo a interna>
+
+docker run -d -p 27018:27017 -v $HOME/db:/data/db --name=mongo
+--network=minha-rede insightlab/mongo:1.0
+ou
+<armazenando em um volume/diretorio>
+docker run -d -v $HOME/db:/data/db --name=mongo --network=minha-rede
+insightlab/mongo:1.
+
+EXECUTANDO CLIENTE DENTRO DA REDE
+
+docker run -p 8080:8081 --network=minha-rede mongo-express

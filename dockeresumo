@@ -1,0 +1,55 @@
+docker pull imagem - baixa uma imagem
+docker rmi imagem - exclui uma imagem
+docker run imagem - executa uma imagem em container
+docker run -d imagem comando - executa em backgroud "d" um comando dentro do container
+docker container - exibe os containers
+docker ps - exibe containers em execução
+docker ps -a exibe todos os containers
+docker container prune - exclui todos os containers parados "stopped"
+docker images - exibe a lista de imagens instaladas.
+docker run -i imagem comando - executa imagem de modo interativo
+docker run -a imagem comando - indexa o terminal
+docker run -it imagem - executa imagem em tempo real e interativo
+
+------------------------------------------------------------------------------------------
+
+Criando imagem com arquivos.dockerfile
+
+Vamos utilizar a imagem base do alpine com a
+seguinte descrição:
+FROM alpine:3.9
+---------------
+podemos indicar o mantenedor da imagem a ser
+criada.
+FROM alpine:3.9
+MAINTAINER Insight Data Science Lab
+	^
+	|
+----------------
+Para executarmos um comando, utilizaremos a palavra chave
+RUN.
+FROM alpine:3.9
+MAINTAINER Insight Data Science Lab
+RUN apk add --no-cache mongodb
+-----------------
+Criando um Dockerfile
+FROM alpine:3.9
+MAINTAINER Insight Data Science Lab
+RUN apk add --no-cache mongodb
+VOLUME /data/db
+EXPOSE 27017
+CMD [ "mongod", "--bind_ip", "0.0.0.0" ]
+----------------
+
+Construindo Imagem e mandando para o DockerHub
+
+Para criarmos uma imagem baseada em um Dockerfile, basta
+utilizarmos a flag -f no comando docker build.
+Além disso, indicaremos o nome da imagem com a
+flag -t.
+Por fim, indicamos onde está o Dockerfile.
+docker build -f Dockerfile -t insightlab/mongo:1.0 .
+docker build -t insightlab/mongo:1.0 .
+
+envio para o dockerhub
+docker push insightlab/mongo:1.0
